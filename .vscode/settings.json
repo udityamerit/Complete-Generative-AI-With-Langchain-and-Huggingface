@@ -3,5 +3,8 @@
     "editor.wordWrap": "on",
     "workbench.colorTheme": "Dark Chai",
     "notebook.output.scrolling": false,
-    "notebook.output.wordWrap": true
+    "notebook.output.wordWrap": true,
+    "cSpell.words": [
+        "Lemmatizer"
+    ]
 }
