@@ -37,6 +37,8 @@ Whether you are an:
 this course will help you gain practical experience in creating intelligent AI-powered systems.
 
 ---
+![alt text](Generativeai.png)
+---
 
 # 🎯 What You Will Learn
 
