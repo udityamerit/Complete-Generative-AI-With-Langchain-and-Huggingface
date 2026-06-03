@@ -3,3 +3,8 @@ pandas
 nltk
 ipykernel
 
+tensorflow
+scikit-learn
+tensorboard
+matplotlib
+streamlit
