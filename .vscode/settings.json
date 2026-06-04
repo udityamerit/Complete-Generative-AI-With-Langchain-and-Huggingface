@@ -5,6 +5,7 @@
     "notebook.output.scrolling": false,
     "notebook.output.wordWrap": true,
     "cSpell.words": [
+        "Earlystopping",
         "Lemmatizer"
     ]
 }
