@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence-to-Sequence Models & The Attention Mechanism</title>
+    <meta name="description" content="A comprehensive, professional research article covering Seq2Seq architectures, the encoder-decoder bottleneck, global attention mechanisms, and the Query-Key-Value paradigm in modern deep learning.">
+    
+    <!-- CSS Stylesheet -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-dark: #07090e;
+            --bg-card: #0d1222;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-purple: #c084fc;
+            --accent-pink: #f472b6;
+            --accent-cyan: #22d3ee;
+            --accent-amber: #fbbf24;
+            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --radius-md: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            font-size: 1rem;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 5% 5%, rgba(167, 139, 250, 0.03) 0%, transparent 30%),
+                radial-gradient(circle at 95% 95%, rgba(34, 211, 238, 0.03) 0%, transparent 30%);
+            background-attachment: fixed;
+        }
+
+        /* Container Layout */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* Header block */
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .tag.green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag.red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        h1 {
+            color: var(--text-primary);
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .author-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Section Layout */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Math formula equations - Color Boxed */
+        .eq-block {
+            background: rgba(13, 18, 34, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .eq-block::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 0.45rem;
+            right: 0.75rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            font-family: var(--font-sans);
+        }
+
+        .eq-recurrent {
+            border-left: 4px solid #3b82f6;
+            background: rgba(59, 130, 246, 0.03);
+            color: #60a5fa;
+        }
+        .eq-recurrent::before { color: #60a5fa; }
+
+        .eq-gradient {
+            border-left: 4px solid #f87171;
+            background: rgba(248, 113, 113, 0.03);
+            color: #f87171;
+        }
+        .eq-gradient::before { color: #f87171; }
+
+        .eq-attention {
+            border-left: 4px solid var(--accent-amber);
+            background: rgba(251, 191, 36, 0.03);
+            color: var(--accent-amber);
+        }
+        .eq-attention::before { color: var(--accent-amber); }
+
+        .eq-bahdanau {
+            border-left: 4px solid var(--accent-purple);
+            background: rgba(192, 132, 252, 0.03);
+            color: var(--accent-purple);
+        }
+        .eq-bahdanau::before { color: var(--accent-purple); }
+
+        .eq-luong {
+            border-left: 4px solid var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.03);
+            color: var(--accent-cyan);
+        }
+        .eq-luong::before { color: var(--accent-cyan); }
+
+        .eq-qkv {
+            border-left: 4px solid var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.03);
+            color: var(--accent-cyan);
+        }
+        .eq-qkv::before { color: var(--accent-cyan); }
+
+        /* Callout Boxes */
+        .callout {
+            background: rgba(192, 132, 252, 0.05);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout-desc {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #04060a;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin: 1.5rem 0;
+            line-height: 1.45;
+        }
+
+        .code-keyword { color: #f472b6; font-weight: 700; }
+        .code-function { color: #60a5fa; }
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-string { color: #34d399; }
+        .code-number { color: #fbbf24; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Architectural Diagram Layout */
+        .diagram-container {
+            background: #080b13;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .diagram-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        /* Highlight classes */
+        .term-purple { color: var(--accent-purple); font-weight: 700; }
+        .term-pink { color: var(--accent-pink); font-weight: 700; }
+        .term-cyan { color: var(--accent-cyan); font-weight: 700; }
+        .term-amber { color: var(--accent-amber); font-weight: 700; }
+    </style>
+
+    <!-- MathJax for LaTeX Equations rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Mermaid.js for Diagrams rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                background: '#0d1222',
+                primaryColor: '#07090e',
+                primaryTextColor: '#ffffff',
+                lineColor: '#a78bfa'
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <div class="meta-tags">
+                <span class="tag blue">Deep Learning</span>
+                <span class="tag green">Transformer</span>
+                <span class="tag red">Seq2Seq</span>
+            </div>
+            <h1>Sequence-to-Sequence Architectures & The Attention Mechanism</h1>
+            <div class="author-date">
+                <span>By Uditya Narayan Tiwari</span>
+                <span>June 2026</span>
+            </div>
+        </header>
+
+        <!-- Section 1: Introduction -->
+        <section>
+            <h2>1. Introduction</h2>
+            <p>
+                The sequence-to-sequence (Seq2Seq) model is a landmark architecture in natural language processing. Originally developed for neural machine translation, it converts an input sequence of tokens (such as a sentence in French) into an output sequence of tokens (its translation in English). The foundation of modern language translation, text summarization, and dialogue conversational models is built upon this concept.
+            </p>
+        </section>
+
+        <!-- Section 2: Why Attention was Needed -->
+        <section>
+            <h2>2. The Encoder-Decoder Bottleneck</h2>
+            <p>
+                Traditional Seq2Seq networks utilize an <strong>Encoder-Decoder</strong> structure. The encoder (an RNN/LSTM) processes the source sentence token-by-token, updating its recurrent state. The final hidden state vector acts as the <strong>context vector</strong>, which is intended to compress the semantics of the entire sequence.
+            </p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Traditional Seq2Seq Bottleneck (.mmd)</div>
+                <div class="mermaid">
+                graph LR
+                    subgraph Encoder
+                        x1(Word 1) --> h1[h1]
+                        x2(Word 2) --> h2[h2]
+                        x3(Word 3) --> h3[h3]
+                        h1 --> h2
+                        h2 --> h3
+                    end
+                    h3 -->|Bottleneck| C((Context Vector))
+                    subgraph Decoder
+                        C --> d1[d1]
+                        d1 --> d2[d2]
+                        d1 --> y1(Out 1)
+                        d2 --> y2(Out 2)
+                    end
+                    style C fill:#f87171,stroke:#ef4444,stroke-width:2px;
+                    style x1 fill:#0d1222,stroke:#94a3b8;
+                    style x2 fill:#0d1222,stroke:#94a3b8;
+                    style x3 fill:#0d1222,stroke:#94a3b8;
+                    style y1 fill:#0d1222,stroke:#34d399;
+                    style y2 fill:#0d1222,stroke:#34d399;
+                </div>
+            </div>
+
+            <p>
+                This model suffers from a critical theoretical flaw: <strong>the bottleneck issue</strong>. All information, regardless of input length (whether 5 words or 100 words), must be compressed into the same fixed-size vector space. When sentences grow longer, recurrent units tend to "forget" earlier tokens due to vanishing gradients during backpropagation.
+            </p>
+            <h3>The Mathematics of Recurrent Forgetfulness</h3>
+            <p>
+                In standard Recurrent Neural Networks (RNNs), the hidden state $h_t$ is computed as:
+            </p>
+            <div class="eq-block eq-recurrent" data-label="Encoder Recurrent Equation">
+                $$h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t + b_h)$$
+            </div>
+            <p>
+                During backpropagation through time (BPTT), the gradient of the loss at step $T$ with respect to the hidden state at step $t$ is calculated via chain-rule matrix products:
+            </p>
+            <div class="eq-block eq-gradient" data-label="BPTT Gradient Chain Rule">
+                $$\frac{\partial L}{\partial h_t} = \frac{\partial L}{\partial h_T} \prod_{k=t+1}^{T} \frac{\partial h_k}{\partial h_{k-1}}$$
+            </div>
+            <p>
+                Since the Jacobian $\partial h_k / \partial h_{k-1} = \text{diag}(1 - \tanh^2(...)) \cdot W_{hh}^T$, multiplying this matrix repeatedly over $T-t$ steps causes the gradient values to either vanish to zero (if the eigenvalues of $W_{hh}$ are less than $1$) or explode (if greater than $1$). Consequently, early words $x_1, x_2$ lose representation capacity in the final state $h_T$.
+            </p>
+        </section>
+
+        <!-- Section 3: Intuition Behind Attention -->
+        <section>
+            <h2>3. Intuition Behind Attention</h2>
+            <p>
+                Attention solves the bottleneck by exposing all encoder hidden states $h_j$ directly to the decoder. At each step $t$ of decoding, instead of reading a single context vector, the decoder queries all the encoder hidden states. It determines which states are most relevant to the word it is currently generating, and constructs a custom context vector $c_t$.
+            </p>
+            
+            <div class="callout">
+                <div class="callout-title">
+                    <span>💡</span> Intuitive Metaphor
+                </div>
+                <p class="callout-desc">
+                    Rather than writing a translation entirely from memory after reading the sentence once, the decoder is given a "shortcut lookup". While writing each word, it scans the original source text to check which words to translate next.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Mathematical Foundation -->
+        <section>
+            <h2>4. Mathematical Formulation</h2>
+            <p>
+                Let the encoder hidden state vectors be $h_1, h_2, ..., h_{T_x}$ (where $T_x$ is input sequence length). Let $s_t$ represent the hidden state of the decoder at time step $t$. The context vector $c_t$ is computed as:
+            </p>
+
+            <div class="eq-block eq-attention" data-label="Context Vector Equation">
+                $$c_t = \sum_{j=1}^{T_x} \alpha_{tj} h_j$$
+            </div>
+
+            <p>
+                The attention coefficients (or alignment weights) $\alpha_{tj}$ represent how much focus the output word at position $t$ should give to the input word at position $j$. These weights are computed by applying a softmax function to the similarity scores:
+            </p>
+
+            <div class="eq-block eq-attention" data-label="Softmax Normalization">
+                $$\alpha_{tj} = \frac{\exp(e_{tj})}{\sum_{k=1}^{T_x} \exp(e_{tk})}$$
+            </div>
+
+            <p>
+                Where $e_{tj} = \text{score}(s_{t-1}, h_j)$ measures how well the inputs around position $j$ and the output at position $t$ align.
+            </p>
+        </section>
+
+        <!-- Section 5: Bahdanau vs Luong -->
+        <section>
+            <h2>5. Bahdanau (Additive) vs. Luong (Multiplicative)</h2>
+            <p>
+                There are two prominent formulations of attention within recurrent architectures:
+            </p>
+            
+            <h3>1. Bahdanau (Additive) Attention</h3>
+            <p>
+                Introduced in 2014, this uses a feed-forward layer to learn the similarity score. It computes the score by feeding the decoder state $s_{t-1}$ and encoder state $h_j$ into a non-linear $\tanh$ layer:
+            </p>
+            <div class="eq-block eq-bahdanau" data-label="Bahdanau Additive Score">
+                $$\text{score}(s_{t-1}, h_j) = v_a^T \tanh(W_a s_{t-1} + U_a h_j)$$
+            </div>
+            
+            <h3>2. Luong (Multiplicative) Attention</h3>
+            <p>
+                Introduced in 2015, Luong attention simplifies the scoring system. It uses dot-products, which are faster and highly optimized for modern hardware:
+            </p>
+            <div class="eq-block eq-luong" data-label="Luong Multiplicative Score">
+                $$\text{score}(s_t, h_j) = s_t^T W h_j$$
+            </div>
+
+            <h3>Architectural Differences & State Timing</h3>
+            <p>
+                Beyond mathematical formulations, Bahdanau and Luong attention differ in their **state calculation pipelines**:
+            </p>
+            <ul>
+                <li><strong>Bahdanau (Additive) State Order:</strong> Uses the <em>previous</em> decoder state $s_{t-1}$ to calculate alignment scores with encoder hidden states $h_j$. The resulting context vector $c_t$ is then concatenated with the current output embedding and fed into the decoder recurrent cell to calculate the <em>current</em> decoder state $s_t$.</li>
+                <li><strong>Luong (Multiplicative) State Order:</strong> The decoder recurrent cell calculates the current state $s_t$ first. This state is then compared against all encoder states $h_j$ to yield attention weights, compiling the context vector $c_t$. The vector $c_t$ and $s_t$ are then combined via a projection matrix to create an auxiliary attentional hidden state $\tilde{s}_t = \tanh(W_c [c_t; s_t])$ which is fed to the output classifier.</li>
+            </ul>
+        </section>
+
+        <!-- Section 6: QKV -->
+        <section>
+            <h2>6. The Query, Key, and Value Metaphor</h2>
+            <p>
+                In Transformer models (Vaswani et al., 2017), recurrence is completely replaced by the Query, Key, and Value (QKV) system.
+                Rather than calculating alignment between recurrent states, each input word vector $x$ is projected into three distinct vectors by learned weight matrices:
+            </p>
+            <ul>
+                <li><span class="term-purple">Query (Q)</span>: What the word is looking for.</li>
+                <li><span class="term-pink">Key (K)</span>: The index label used for matching queries.</li>
+                <li><span class="term-cyan">Value (V)</span>: The actual semantic payload of the word.</li>
+            </ul>
+
+            <div class="eq-block eq-qkv" data-label="Scaled Dot-Product Attention">
+                $$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+            </div>
+
+            <p>
+                In matrix format, given a sequence of input embedding vectors packed as row vectors in matrix $X \in \mathbb{R}^{N \times d_{\text{model}}}$, we compute the projections:
+            </p>
+            <div class="eq-block eq-qkv" data-label="Q, K, V Projections">
+                $$Q = X \cdot W_Q, \quad K = X \cdot W_K, \quad V = X \cdot W_V$$
+                $$\text{where } Q \in \mathbb{R}^{N \times d_k}, \ K \in \mathbb{R}^{N \times d_k}, \ V \in \mathbb{R}^{N \times d_v}$$
+            </div>
+            <p>
+                Multiplying $Q \cdot K^T$ generates an $N \times N$ similarity matrix. Each cell $(i, j)$ in this matrix stores the dot-product similarity score between the query of token $i$ and the key of token $j$. Applying softmax along the rows translates these scores into attention weights.
+            </p>
+
+            <div class="callout" style="background: rgba(34, 211, 238, 0.03); border-left-color: var(--accent-cyan);">
+                <div class="callout-title" style="color: var(--accent-cyan);">
+                    <span>💡</span> Why divide by &radic;d<sub>k</sub>?
+                </div>
+                <p class="callout-desc">
+                    For high dimensionality, the dot product $Q \cdot K^T$ grows large in magnitude. This pushes the softmax function into regions with extremely small gradients. Dividing by the scaling factor $\sqrt{d_k}$ stabilizes training.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 7: Multi-Head Attention -->
+        <section>
+            <h2>7. Multi-Head Attention</h2>
+            <p>
+                Instead of performing a single attention function, Multi-Head Attention projects Queries, Keys, and Values $h$ times in parallel. This allows the model to capture different types of relationships simultaneously (e.g., one head handles subject-verb matching, another handles coreferences, and another handles immediate neighbors).
+            </p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Multi-Head Projection (.mmd)</div>
+                <div class="mermaid">
+                graph TD
+                    In[Q, K, V Input Matrix] --> W1[Head 1: Linear W_Q1, W_K1, W_V1]
+                    In --> W2[Head 2: Linear W_Q2, W_K2, W_V2]
+                    In --> W3[Head 3: Linear W_Q3, W_K3, W_V3]
+                    W1 --> Att1[Attention 1]
+                    W2 --> Att2[Attention 2]
+                    W3 --> Att3[Attention 3]
+                    Att1 --> Concat[Concat heads]
+                    Att2 --> Concat
+                    Att3 --> Concat
+                    Concat --> Linear[Linear W_O]
+                    Linear --> Out[Multi-Head Attended Representation]
+                    style In fill:#0d1222,stroke:#c084fc,stroke-width:2px;
+                    style Concat fill:#0d1222,stroke:#f472b6,stroke-width:2px;
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Complexity -->
+        <section>
+            <h2>8. Complexity & Tradeoffs</h2>
+            <p>
+                By shifting from recurrence to fully parallelized self-attention, Transformers achieve massive training scale. However, this comes at a computational cost:
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Layer Type</th>
+                        <th>Complexity per Layer</th>
+                        <th>Sequential Operations</th>
+                        <th>Maximum Path Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Recurrent (RNN)</strong></td>
+                        <td>O(n · d<sup>2</sup>)</td>
+                        <td>O(n)</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Self-Attention</strong></td>
+                        <td>O(n<sup>2</sup> · d)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                While recurrent networks are linear in complexity with respect to sentence length, they must process words sequentially. Self-attention layers compute all relationships in parallel ($O(1)$ operations), but require quadratic complexity ($O(n^2)$) due to the computation of the pairwise attention similarity matrix.
+            </p>
+        </section>
+
+        <!-- Section 9: Code -->
+        <section>
+            <h2>9. Implementation from Scratch</h2>
+            <p>
+                Below is a standard PyTorch implementation of the scaled dot-product attention equation:
+            </p>
+            <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">import</span> torch.nn.functional <span class="code-keyword">as</span> F
+ 
+<span class="code-keyword">def</span> <span class="code-function">scaled_dot_product_attention</span>(q, k, v):
+    <span class="code-comment"># q size: [batch, heads, seq_len, d_k]</span>
+    <span class="code-comment"># k size: [batch, heads, seq_len, d_k]</span>
+    <span class="code-comment"># v size: [batch, heads, seq_len, d_v]</span>
+    
+    d_k = q.size(-<span class="code-number">1</span>)
+    
+    <span class="code-comment"># 1. Similarity Matrix</span>
+    scores = torch.matmul(q, k.transpose(-<span class="code-number">2</span>, -<span class="code-number">1</span>))
+    
+    <span class="code-comment"># 2. Scaling</span>
+    scaled_scores = scores / (d_k ** <span class="code-number">0.5</span>)
+    
+    <span class="code-comment"># 3. Softmax Distribution</span>
+    attention_weights = F.softmax(scaled_scores, dim=-<span class="code-number">1</span>)
+    
+    <span class="code-comment"># 4. Values Weighted Combination</span>
+    output = torch.matmul(attention_weights, v)
+    
+    <span class="code-keyword">return</span> output, attention_weights</code></pre>
+        </section>
+    </div>
+
+</body>
+</html>
