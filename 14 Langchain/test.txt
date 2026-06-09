@@ -1,0 +1,19 @@
+Hello everyone,
+
+My name is Uditya Narayan Tiwari, and I am currently pursuing a Bachelor of Technology in Computer Science and Engineering with a specialization in Artificial Intelligence and Machine Learning at VIT Bhopal University.
+
+I am passionate about building intelligent systems using machine learning and data-driven approaches to solve real-world problems. My primary technical skills include Python, machine learning, and data analysis, and I work extensively with libraries and frameworks such as Pandas, NumPy, Scikit-learn, and Matplotlib for developing and evaluating predictive models. I also have experience working with frameworks and tools like TensorFlow and PyTorch for deep learning, along with cloud platforms such as Google Cloud and AWS for deploying and managing scalable AI solutions.
+
+One of my key projects is AIOPharmacy, an intelligent medicine recommendation system designed to address healthcare information overload. In this system, users can input their symptoms through text or voice, and the platform recommends relevant medications along with brand alternatives. The system leverages Sentence Transformers for deep semantic understanding and applies the Maximal Marginal Relevance algorithm to generate diverse and relevant recommendations, making complex pharmaceutical information more accessible for users.
+
+I have also worked on a breast cancer prediction project where I implemented multiple machine learning algorithms to analyze medical diagnostic data and predict whether a tumor is benign or malignant. This project involved data preprocessing, feature analysis, and model comparison using Scikit-learn to evaluate different algorithms.
+
+Another project I worked on is credit card approval prediction, where I developed a classification model to determine whether a credit card application should be approved or rejected based on applicant data. Through this project, I gained hands-on experience in data preprocessing, feature engineering, and machine learning model evaluation.
+
+Apart from projects, I am also a core team member in the Blockchain Technology R&D team and part of the tech team of the Matrix Club, where I collaborate with peers on innovative technical initiatives.
+
+I have also completed certifications in geodata processing using Python from ISRO, along with courses in machine learning and AI-based data analysis, which helped strengthen my analytical and problem-solving skills.
+
+I am currently looking for internship opportunities where I can apply my skills in machine learning, AI, and data science while continuing to learn from industry professionals and contributing to impactful projects.
+
+Thank you for your time, and I look forward to connecting with you.
