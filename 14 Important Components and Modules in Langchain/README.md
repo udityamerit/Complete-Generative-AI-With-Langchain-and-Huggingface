@@ -81,30 +81,20 @@ Benefits:
 
 ```mermaid
 flowchart LR
+    A[Documents] --> B[Document Loaders]
+    B --> C[Text Splitter]
+    C --> D[Chunks]
+    D --> E[Embedding Model]
+    E --> F[Vector Database]
 
-A[Documents] --> B[Document Loaders]
+    U[User Question] --> G[Query]
+    G --> H[Query Embedding]
+    H --> F
 
-B --> C[Text Splitter]
-
-C --> D[Chunks]
-
-D --> E[Embedding Model]
-
-E --> F[Vector Database]
-
-User --> G[Query]
-
-G --> H[Query Embedding]
-
-H --> F
-
-F --> I[Top K Chunks]
-
-I --> J[Prompt Template]
-
-J --> K[LLM]
-
-K --> L[Final Response]
+    F --> I[Top K Chunks]
+    I --> J[Prompt Template]
+    J --> K[LLM]
+    K --> L[Final Response]
 ```
 
 ---
