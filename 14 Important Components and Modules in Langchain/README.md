@@ -1,7 +1,7 @@
 # 🦜 LangChain RAG Pipeline: Complete Developer Guide
 
 <p align="center">
-  <img src="banner.png" alt="LangChain RAG Pipeline Banner" width="100%">
+  <img src="bannerr.png" alt="LangChain RAG Pipeline Banner" width="100%">
 </p>
 
 <p align="center">
