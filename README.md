@@ -18,7 +18,8 @@
 </div>
 
 ---
-
+![alt text](course.png)
+---
 # 📌 Overview
 
 Welcome to the **Complete Generative AI With LangChain and Hugging Face** repository — a complete hands-on course designed to help you understand, build, deploy, and optimize modern Generative AI applications using cutting-edge technologies like **LangChain**, **Hugging Face**, **LLMs**, and **RAG Pipelines**.
