@@ -30,3 +30,4 @@ langchain_groq
 fastapi
 langserve[all]
 langchain-google-vertexai
+langchain-core
