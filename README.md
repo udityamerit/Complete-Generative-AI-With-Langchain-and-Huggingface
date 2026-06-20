@@ -172,25 +172,6 @@ Hands-on real-world projects including:
 
 ---
 
-# 📂 Repository Structure
-
-```bash
-📦 Complete-Generative-AI-With-Langchain-and-Huggingface
- ┣ 📂 LangChain
- ┣ 📂 HuggingFace
- ┣ 📂 RAG
- ┣ 📂 Projects
- ┣ 📂 Deployment
- ┣ 📂 NLP
- ┣ 📂 VectorDatabases
- ┣ 📂 AI_Agents
- ┣ 📂 Prompt_Engineering
- ┣ 📜 README.md
- ┗ 📜 requirements.txt
-```
-
----
-
 # 📖 Prerequisites
 
 Before starting this course, you should have:
