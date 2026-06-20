@@ -17,6 +17,7 @@
 
 </div>
 
+
 ---
 ![alt text](course.png)
 ---
@@ -38,7 +39,76 @@ Whether you are an:
 this course will help you gain practical experience in creating intelligent AI-powered systems.
 
 ---
-![alt text](Generativeai.png)
+
+# 📚 Recommended Learning Path
+
+![alt text](roadmap.png)
+---
+
+### Phase 1: Programming & AI Foundations
+
+### Phase 2: Generative AI Fundamentals
+
+### Phase 3: Large Language Models (LLMs)
+
+### Phase 4: Prompt Engineering
+
+### Phase 5: Hugging Face Ecosystem
+
+### Phase 6: LangChain Fundamentals
+
+### Phase 7: Embeddings & Vector Databases
+
+### Phase 8: Retrieval-Augmented Generation (RAG)
+
+### Phase 9: Building AI-Powered Applications
+
+### Phase 10: AI Agents & Agentic Workflows
+
+### Phase 11: Model Context Protocol (MCP)
+
+### Phase 12: Deployment & Production Systems
+
+### Phase 13: Optimization, Monitoring & Evaluation
+
+### Phase 14: End-to-End Industry Projects
+
+### Phase 15: Production-Ready Generative AI Engineer
+
+**Learning Journey:**
+
+```text
+Programming Fundamentals
+        ↓
+Generative AI
+        ↓
+LLMs
+        ↓
+Prompt Engineering
+        ↓
+Hugging Face
+        ↓
+LangChain
+        ↓
+Vector Databases
+        ↓
+RAG Systems
+        ↓
+AI Applications
+        ↓
+AI Agents
+        ↓
+MCP
+        ↓
+Deployment
+        ↓
+Optimization
+        ↓
+Industry Projects
+        ↓
+GenAI Engineer
+```
+
 ---
 
 # 🎯 What You Will Learn
@@ -240,6 +310,8 @@ After completing this course, you will be able to:
 ✔️ Work with LLM-Based Architectures
 
 ---
+![alt text](Generativeai.png)
+---
 
 # ⚙️ Installation
 
@@ -267,22 +339,6 @@ python app.py
 ```
 
 ---
-
-# 📚 Recommended Learning Path
-
-1. Introduction to Generative AI
-2. Python & Environment Setup
-3. LangChain Basics
-4. Hugging Face Transformers
-5. Prompt Engineering
-6. RAG Pipelines
-7. Building AI Applications
-8. Deployment Techniques
-9. Optimization Strategies
-10. End-to-End Projects
-
----
-
 # 🌟 Why Learn Generative AI?
 
 Generative AI is one of the fastest-growing domains in technology and is widely adopted across industries.
