@@ -31,3 +31,9 @@ fastapi
 langserve[all]
 langchain-google-vertexai
 langchain-core
+duckdb
+duckduckgo-search
+pymupdf
+arxiv
+wikipedia
+langchainhub
