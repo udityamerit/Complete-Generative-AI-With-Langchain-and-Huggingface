@@ -37,3 +37,4 @@ pymupdf
 arxiv
 wikipedia
 langchainhub
+ddgs
