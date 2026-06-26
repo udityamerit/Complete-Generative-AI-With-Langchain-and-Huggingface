@@ -1,24 +1,31 @@
 import sqlite3
 
 connection = sqlite3.connect("student.db")
-
 cursor = connection.cursor()
 
 table_info = """
-create table STUDENT(NAME VARCHAR(25), CLASS VARCHAR(25), SECTION VARCHAR(25), MARKS INT)
+CREATE TABLE IF NOT EXISTS STUDENT(
+    NAME TEXT,
+    CLASS TEXT,
+    SECTION TEXT,
+    MARKS INTEGER
+)
 """
+
 cursor.execute(table_info)
 
-cursor.execute('''Insert Into STUDENT values('Uditya', 'Machine Learning', 'A', '99')''')
-cursor.execute('''Insert Into STUDENT values('sai', 'cyber security', 's', '90')''')
-cursor.execute('''Insert Into STUDENT values('Adarsh', 'Machine', 'A', '100')''')
-cursor.execute('''Insert Into STUDENT values('Ram, 'Data Learning', 'A', '50')''')
-cursor.execute('''Insert Into STUDENT values('Raghu', 'Deep Learning', 'A', '96')''')
+cursor.execute("INSERT INTO STUDENT VALUES ('Uditya', 'Machine Learning', 'A', 99)")
+cursor.execute("INSERT INTO STUDENT VALUES ('Sai', 'Cyber Security', 'S', 90)")
+cursor.execute("INSERT INTO STUDENT VALUES ('Adarsh', 'Machine', 'A', 100)")
+cursor.execute("INSERT INTO STUDENT VALUES ('Ram', 'Data Learning', 'A', 50)")
+cursor.execute("INSERT INTO STUDENT VALUES ('Raghu', 'Deep Learning', 'A', 96)")
 
-print("The Inserted records are")
-data = cursor.execute('''Select * from STUDENT''')
+connection.commit()
+
+print("Inserted Records:")
+
+data = cursor.execute("SELECT * FROM STUDENT")
 for row in data:
     print(row)
 
-connection.commit()
 connection.close()

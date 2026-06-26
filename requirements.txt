@@ -38,3 +38,5 @@ arxiv
 wikipedia
 langchainhub
 ddgs
+mysql-connector-python
+SQLAlchemy
