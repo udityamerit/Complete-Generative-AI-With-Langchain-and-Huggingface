@@ -50,11 +50,6 @@ def wikipedia_search(query: str) -> str:
 def calculator(expression: str) -> str:
     """
     Evaluate mathematical expressions.
-
-    Example:
-    2+3*5
-    sqrt(25)
-    (12*11*10)/(3*2*1)
     """
 
     try:
