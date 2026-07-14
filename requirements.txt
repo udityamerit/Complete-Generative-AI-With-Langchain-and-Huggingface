@@ -48,3 +48,4 @@ huggingface_hub
 gradio
 boto3
 awscli
+
