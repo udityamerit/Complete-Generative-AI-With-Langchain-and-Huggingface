@@ -48,4 +48,5 @@ huggingface_hub
 gradio
 boto3
 awscli
-
+openai
+langchain-nvidia-ai-endpoints
