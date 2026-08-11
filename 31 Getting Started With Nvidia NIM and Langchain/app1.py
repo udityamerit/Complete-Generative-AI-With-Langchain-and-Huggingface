@@ -12,31 +12,24 @@ from langchain_classic.chains import create_retrieval_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
 
-# -------------------------------
-# Load Environment Variables
-# -------------------------------
 
 load_dotenv()
 
-api_key = os.getenv("NVIDIA_NIM_API_KEY")
+api_key = os.getenv("NVIDIA_API_KEY")
 
 if not api_key:
-    st.error("❌ NVIDIA_NIM_API_KEY not found in .env file.")
+    st.error("NVIDIA_API_KEY not found in .env file.")
     st.stop()
 
-os.environ["NVIDIA_NIM_API_KEY"] = api_key
+os.environ["NVIDIA_API_KEY"] = api_key
 
-# -------------------------------
-# Initialize LLM
-# -------------------------------
+
 
 llm = ChatNVIDIA(
     model="nvidia/nemotron-3-ultra-550b-a55b"
 )
 
-# -------------------------------
-# Create Vector Embeddings
-# -------------------------------
+
 
 def vector_embedding():
 
@@ -46,7 +39,7 @@ def vector_embedding():
 
             st.session_state.embeddings = NVIDIAEmbeddings()
 
-            st.session_state.loader = PyPDFDirectoryLoader("../us_census")
+            st.session_state.loader = PyPDFDirectoryLoader("us_census")
 
             st.session_state.docs = st.session_state.loader.load()
 
@@ -55,7 +48,6 @@ def vector_embedding():
                 chunk_overlap=50
             )
 
-            # ✅ FIXED
             st.session_state.final_documents = (
                 st.session_state.text_splitter.split_documents(
                     st.session_state.docs[:30]
@@ -67,9 +59,7 @@ def vector_embedding():
                 st.session_state.embeddings
             )
 
-# -------------------------------
-# UI
-# -------------------------------
+
 
 st.title("ChatNVIDIA NIM Demo")
 
@@ -95,25 +85,20 @@ prompt1 = st.text_input(
     "Enter your question from the document"
 )
 
-# -------------------------------
-# Create Embeddings Button
-# -------------------------------
 
 if st.button("Document Embedding"):
 
     vector_embedding()
 
-    st.success("✅ FAISS Vector Store DB is Ready using NVIDIA Embeddings")
+    st.success("FAISS Vector Store DB is Ready using NVIDIA Embeddings")
 
-# -------------------------------
-# Question Answering
-# -------------------------------
+
 
 if prompt1:
 
     # Prevent error if embeddings are not created
     if "vectors" not in st.session_state:
-        st.warning("⚠ Please click 'Document Embedding' first.")
+        st.warning(" Please click 'Document Embedding' first.")
         st.stop()
 
     document_chain = create_stuff_documents_chain(
@@ -148,7 +133,7 @@ if prompt1:
 
     st.write(response["answer"])
 
-    st.info(f"⏱ Response Time: {end-start:.2f} seconds")
+    st.info(f" Response Time: {end-start:.2f} seconds")
 
     with st.expander("Document Similarity Search"):
 
