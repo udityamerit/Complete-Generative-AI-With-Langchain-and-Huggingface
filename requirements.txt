@@ -50,3 +50,5 @@ boto3
 awscli
 openai
 langchain-nvidia-ai-endpoints
+crewai
+crewai_tools
